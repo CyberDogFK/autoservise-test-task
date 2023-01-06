@@ -25,10 +25,5 @@ public class Service {
     @ManyToOne
     private Master master;
     private BigDecimal price;
-    private Status status;
-
-    public enum Status {
-        PAID,
-        NON_PAID
-    }
+    private ServiceStatus status;
 }

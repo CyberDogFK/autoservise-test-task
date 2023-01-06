@@ -1,6 +1,8 @@
 package com.mate.test.autoservice.mateautoservice.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -32,21 +34,13 @@ public class Order {
     @ManyToOne
     private Car car;
     private String problemDescription;
-    private LocalDateTime acceptanceDate;
+    private LocalDate acceptanceDate;
     @ManyToMany
     private List<Service> services;
     @ManyToMany
     private List<Article> articles;
-    private Status status;
+    @Enumerated(value = EnumType.STRING)
+    private OrderStatus status;
     private BigDecimal price;
     private LocalDate completeDate;
-
-
-    public enum Status {
-        ACCEPTED,
-        IN_PROCESS,
-        COMPLETED,
-        FAIL_COMPLETED,
-        PAID_FOR
-    }
 }
