@@ -19,6 +19,7 @@ import static com.mate.test.autoservice.mateautoservice.model.ServiceStatus.PAID
 
 @Component
 public class MasterServiceImpl implements MasterService {
+    private final static double PAYMENT = 40; //in percent
     private final MasterRepository masterRepository;
     private final ServiceService serviceService;
     private final OrderService orderService;
@@ -50,10 +51,11 @@ public class MasterServiceImpl implements MasterService {
     @Override
     public Double paidForServicesForMaster(Long id) {
         List<Service> notPaidServices = getNotPaidServicesForMaster(id);
-        Double result = notPaidServices.stream()
+        double result = notPaidServices.stream()
                 .peek(s -> s.setStatus(PAID))
                 .mapToDouble(s -> s.getPrice().doubleValue())
                 .sum();
+        result -= PAYMENT * result / 100;
         serviceService.saveAll(notPaidServices);
         List<Order> notPaidOrders = getNotPaidOrdersForMaster(id);
         for (Order order : notPaidOrders) {

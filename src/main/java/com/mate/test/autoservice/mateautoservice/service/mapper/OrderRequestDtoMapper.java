@@ -31,7 +31,6 @@ public class OrderRequestDtoMapper implements RequestDtoMapper<OrderRequestDto, 
         order.setServices(serviceService.getAllByIds(dto.getServicesIds()));
         order.setArticles(articleService.getAllByIds(dto.getArticlesIds()));
         order.setStatus(OrderStatus.valueOf(dto.getStatus()));
-        order.setPrice(dto.getPrice());
         order.setCompleteDate(dto.getCompletedDate());
         return order;
     }

@@ -7,8 +7,8 @@ import lombok.Setter;
 @Setter
 public class CarResponseDto {
     private Long id;
-    private Long brandId;
-    private Long modelId;
+    private String brand;
+    private String model;
     private Integer year;
     private String regNumber;
     private Long ownerId;

@@ -1,11 +1,12 @@
 package com.mate.test.autoservice.mateautoservice.controller;
 
 import com.mate.test.autoservice.mateautoservice.dto.request.OwnerRequestDto;
+import com.mate.test.autoservice.mateautoservice.dto.response.CarResponseDto;
 import com.mate.test.autoservice.mateautoservice.dto.response.OrderResponseDto;
 import com.mate.test.autoservice.mateautoservice.dto.response.OwnerResponseDto;
-import com.mate.test.autoservice.mateautoservice.model.Order;
 import com.mate.test.autoservice.mateautoservice.model.Owner;
 import com.mate.test.autoservice.mateautoservice.service.OwnerService;
+import com.mate.test.autoservice.mateautoservice.service.mapper.CarResponseDtoMapper;
 import com.mate.test.autoservice.mateautoservice.service.mapper.OrderResponseDtoMapper;
 import com.mate.test.autoservice.mateautoservice.service.mapper.OwnerRequestDtoMapper;
 import com.mate.test.autoservice.mateautoservice.service.mapper.OwnerResponseDtoMapper;
@@ -28,14 +29,16 @@ public class OwnerController {
     private final OwnerRequestDtoMapper ownerRequestDtoMapper;
     private final OwnerResponseDtoMapper ownerResponseDtoMapper;
     private final OrderResponseDtoMapper orderResponseDtoMapper;
+    private final CarResponseDtoMapper carResponseDtoMapper;
 
     public OwnerController(OwnerService ownerService,
                            OwnerRequestDtoMapper ownerRequestDtoMapper,
-                           OwnerResponseDtoMapper ownerResponseDtoMapper, OrderResponseDtoMapper orderResponseDtoMapper) {
+                           OwnerResponseDtoMapper ownerResponseDtoMapper, OrderResponseDtoMapper orderResponseDtoMapper, CarResponseDtoMapper carResponseDtoMapper) {
         this.ownerService = ownerService;
         this.ownerRequestDtoMapper = ownerRequestDtoMapper;
         this.ownerResponseDtoMapper = ownerResponseDtoMapper;
         this.orderResponseDtoMapper = orderResponseDtoMapper;
+        this.carResponseDtoMapper = carResponseDtoMapper;
     }
 
     @PostMapping
@@ -57,6 +60,13 @@ public class OwnerController {
     public List<OrderResponseDto> getOrdersOf(@PathVariable Long id) {
         return ownerService.getOrdersOfOwner(id).stream()
                 .map(orderResponseDtoMapper::mapToDto)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/{id}/cars")
+    public List<CarResponseDto> getOwnerCars(@PathVariable Long id) {
+        return ownerService.getById(id).getCars().stream()
+                .map(carResponseDtoMapper::mapToDto)
                 .collect(Collectors.toList());
     }
 }

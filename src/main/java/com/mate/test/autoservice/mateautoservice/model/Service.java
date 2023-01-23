@@ -1,6 +1,8 @@
 package com.mate.test.autoservice.mateautoservice.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -25,5 +27,6 @@ public class Service {
     @ManyToOne
     private Master master;
     private BigDecimal price;
+    @Enumerated(EnumType.STRING)
     private ServiceStatus status;
 }

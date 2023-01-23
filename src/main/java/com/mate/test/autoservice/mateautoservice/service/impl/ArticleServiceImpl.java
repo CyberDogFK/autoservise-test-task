@@ -17,15 +17,12 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public List<Article> getAllByIds(List<Long> ids) {
-        List<Article> allById = articleRepository.findAllById(ids);
-        if (allById.isEmpty()) {
-            throw new RuntimeException("Can't find any article from ids " + ids);
-        }
-        return allById;
+        return articleRepository.findAllById(ids);
     }
 
     @Override
     public Article save(Article article) {
         return articleRepository.save(article);
     }
+
 }

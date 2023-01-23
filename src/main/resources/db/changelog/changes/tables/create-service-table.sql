@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS public.service
     id bigint NOT NULL,
     name character varying(255) COLLATE pg_catalog."default",
     price numeric(38,2),
-    status smallint,
+    status varchar(255),
     master_id bigint,
     CONSTRAINT service_pkey PRIMARY KEY (id),
     CONSTRAINT master_fk FOREIGN KEY (master_id)

@@ -6,6 +6,9 @@ import com.mate.test.autoservice.mateautoservice.service.CarService;
 import com.mate.test.autoservice.mateautoservice.service.OrderService;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class OwnerRequestDtoMapper implements RequestDtoMapper<OwnerRequestDto, Owner> {
     private final CarService carService;
@@ -19,8 +22,16 @@ public class OwnerRequestDtoMapper implements RequestDtoMapper<OwnerRequestDto, 
     @Override
     public Owner mapToModel(OwnerRequestDto dto) {
         Owner owner = new Owner();
-        owner.setCars(carService.getAllByIds(dto.getCarsIds()));
-        owner.setOrders(orderService.getAllByIds(dto.getOrdersIds()));
+        if (dto.getCarsIds() != null) {
+            owner.setCars(carService.getAllByIds(dto.getCarsIds()));
+        } else {
+            owner.setCars(List.of());
+        }
+        if (dto.getOrdersIds() != null) {
+            owner.setOrders(orderService.getAllByIds(dto.getOrdersIds()));
+        } else {
+            owner.setOrders(List.of());
+        }
         return owner;
     }
 }

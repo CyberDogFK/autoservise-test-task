@@ -1,5 +1,6 @@
 package com.mate.test.autoservice.mateautoservice.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,12 +24,10 @@ public class Car {
             sequenceName = "car_id_seq",
             allocationSize = 1)
     private Long id;
-    @ManyToOne
-    private Brand brand;
-    @ManyToOne
-    private Model model;
+    private String brand;
+    private String model;
     private Integer year;
     private String regNumber;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     private Owner owner;
 }

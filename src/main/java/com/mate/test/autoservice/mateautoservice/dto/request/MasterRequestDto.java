@@ -9,5 +9,5 @@ import java.util.List;
 @Setter
 public class MasterRequestDto {
     private String name;
-    private List<Long> solvedOrdersIds;;
+    private List<Long> solvedOrdersIds;
 }

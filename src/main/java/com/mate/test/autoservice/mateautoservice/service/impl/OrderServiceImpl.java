@@ -3,7 +3,10 @@ package com.mate.test.autoservice.mateautoservice.service.impl;
 import com.mate.test.autoservice.mateautoservice.model.Article;
 import com.mate.test.autoservice.mateautoservice.model.Order;
 import com.mate.test.autoservice.mateautoservice.repository.OrderRepository;
+import com.mate.test.autoservice.mateautoservice.service.ArticleService;
 import com.mate.test.autoservice.mateautoservice.service.OrderService;
+import com.mate.test.autoservice.mateautoservice.service.OwnerService;
+import com.mate.test.autoservice.mateautoservice.service.ServiceService;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -11,10 +14,18 @@ import java.util.List;
 
 @Service
 public class OrderServiceImpl implements OrderService {
+    private final static double ARTICLE_DISCOUNT = 1; // in percent
+    private final static double ORDER_DISCOUNT = 2; // in percent
+    private final ArticleService articleService;
     private final OrderRepository orderRepository;
+    private final ServiceService serviceService;
+    private final OwnerService ownerService;
 
-    public OrderServiceImpl(OrderRepository orderRepository) {
+    public OrderServiceImpl(ArticleService articleService, OrderRepository orderRepository, ServiceService serviceService, OwnerService ownerService) {
+        this.articleService = articleService;
         this.orderRepository = orderRepository;
+        this.serviceService = serviceService;
+        this.ownerService = ownerService;
     }
 
     @Override
@@ -35,7 +46,10 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order addArticleForOrder(Article article, Long id) {
-        return orderRepository.updateArticleForOrder(article, id);
+        //orderRepository.updateArticleForOrder(article, id);
+        Order byId = getById(id);
+        byId.getArticles().add(article);
+        return orderRepository.save(byId);
     }
 
     @Override
@@ -53,5 +67,30 @@ public class OrderServiceImpl implements OrderService {
             throw new RuntimeException("Can't find any order by ids " + ids);
         }
         return allById;
+    }
+
+    @Override
+    public BigDecimal getPriceWithDiscount(List<Long> articleIds, Long ownerId) {
+        double priceOfServices = getDiscountForOrders(ownerId);
+        double priceOfArticles = getPriceOfArticles(articleIds);
+        return BigDecimal.valueOf(priceOfServices + priceOfArticles);
+    }
+
+    private double getPriceOfArticles(List<Long> articleIds) {
+        double sum = articleService.getAllByIds(articleIds)
+                .stream()
+                .mapToDouble(s -> s.getPrice().doubleValue())
+                .sum();
+        double percents = (ARTICLE_DISCOUNT * sum) / 100;
+        sum -= percents;
+        return sum;
+    }
+
+    private double getDiscountForOrders(Long ownerId) {
+        int count = ownerService.getOrdersOfOwner(ownerId)
+                .size();
+        double percents = (ORDER_DISCOUNT * count) / 100;
+        count -= percents;
+        return count;
     }
 }

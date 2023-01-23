@@ -5,6 +5,7 @@ import com.mate.test.autoservice.mateautoservice.repository.ServiceRepository;
 import com.mate.test.autoservice.mateautoservice.service.ServiceService;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Component
