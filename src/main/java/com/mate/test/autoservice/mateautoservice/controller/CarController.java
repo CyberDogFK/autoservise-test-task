@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/car")
 public class CarController {
@@ -28,7 +26,8 @@ public class CarController {
     private final ResponseDtoMapper<CarResponseDto, Car> carResponseDtoMapper;
 
     public CarController(CarService carService,
-                         OwnerService ownerService, RequestDtoMapper<CarRequestDto, Car> carRequestDtoMapper,
+                         OwnerService ownerService,
+                         RequestDtoMapper<CarRequestDto, Car> carRequestDtoMapper,
                          ResponseDtoMapper<CarResponseDto, Car> carResponseDtoMapper) {
         this.carService = carService;
         this.ownerService = ownerService;

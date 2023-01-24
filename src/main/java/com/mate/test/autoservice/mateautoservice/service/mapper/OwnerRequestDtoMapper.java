@@ -4,10 +4,8 @@ import com.mate.test.autoservice.mateautoservice.dto.request.OwnerRequestDto;
 import com.mate.test.autoservice.mateautoservice.model.Owner;
 import com.mate.test.autoservice.mateautoservice.service.CarService;
 import com.mate.test.autoservice.mateautoservice.service.OrderService;
-import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
 import java.util.List;
+import org.springframework.stereotype.Component;
 
 @Component
 public class OwnerRequestDtoMapper implements RequestDtoMapper<OwnerRequestDto, Owner> {

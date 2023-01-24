@@ -6,25 +6,23 @@ import com.mate.test.autoservice.mateautoservice.repository.OrderRepository;
 import com.mate.test.autoservice.mateautoservice.service.ArticleService;
 import com.mate.test.autoservice.mateautoservice.service.OrderService;
 import com.mate.test.autoservice.mateautoservice.service.OwnerService;
-import com.mate.test.autoservice.mateautoservice.service.ServiceService;
-import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
 import java.util.List;
+import org.springframework.stereotype.Service;
 
 @Service
 public class OrderServiceImpl implements OrderService {
-    private final static double ARTICLE_DISCOUNT = 1; // in percent
-    private final static double ORDER_DISCOUNT = 2; // in percent
+    private static final double ARTICLE_DISCOUNT = 1; // in percent
+    private static final double ORDER_DISCOUNT = 2; // in percent
     private final ArticleService articleService;
     private final OrderRepository orderRepository;
-    private final ServiceService serviceService;
     private final OwnerService ownerService;
 
-    public OrderServiceImpl(ArticleService articleService, OrderRepository orderRepository, ServiceService serviceService, OwnerService ownerService) {
+    public OrderServiceImpl(ArticleService articleService,
+                            OrderRepository orderRepository,
+                            OwnerService ownerService) {
         this.articleService = articleService;
         this.orderRepository = orderRepository;
-        this.serviceService = serviceService;
         this.ownerService = ownerService;
     }
 

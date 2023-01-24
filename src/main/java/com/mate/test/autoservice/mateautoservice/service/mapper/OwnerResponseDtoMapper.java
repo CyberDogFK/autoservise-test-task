@@ -4,10 +4,8 @@ import com.mate.test.autoservice.mateautoservice.dto.response.OwnerResponseDto;
 import com.mate.test.autoservice.mateautoservice.model.Car;
 import com.mate.test.autoservice.mateautoservice.model.Order;
 import com.mate.test.autoservice.mateautoservice.model.Owner;
-import com.mate.test.autoservice.mateautoservice.service.CarService;
-import org.springframework.stereotype.Component;
-
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Component;
 
 @Component
 public class OwnerResponseDtoMapper implements ResponseDtoMapper<OwnerResponseDto, Owner> {

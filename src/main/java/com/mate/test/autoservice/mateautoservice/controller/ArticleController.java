@@ -6,6 +6,8 @@ import com.mate.test.autoservice.mateautoservice.model.Article;
 import com.mate.test.autoservice.mateautoservice.service.ArticleService;
 import com.mate.test.autoservice.mateautoservice.service.mapper.RequestDtoMapper;
 import com.mate.test.autoservice.mateautoservice.service.mapper.ResponseDtoMapper;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -22,21 +24,31 @@ public class ArticleController {
 
     public ArticleController(ArticleService articleService,
                              RequestDtoMapper<ArticleRequestDto, Article> articleRequestDtoMapper,
-                             ResponseDtoMapper<ArticleResponseDto, Article> articleResponseDtoMapper) {
+                             ResponseDtoMapper<ArticleResponseDto,
+                                     Article> articleResponseDtoMapper) {
         this.articleService = articleService;
         this.articleRequestDtoMapper = articleRequestDtoMapper;
         this.articleResponseDtoMapper = articleResponseDtoMapper;
     }
 
     @PostMapping
-    public ArticleResponseDto create(@RequestBody ArticleRequestDto articleRequestDto) {
+    @ApiOperation("Creating article and return creating object")
+    public ArticleResponseDto create(@RequestBody
+                                         @ApiParam("Get name and price")
+                                         ArticleRequestDto articleRequestDto) {
         return articleResponseDtoMapper.mapToDto(
                 articleService.save(
                         articleRequestDtoMapper.mapToModel(articleRequestDto)));
     }
 
     @PutMapping("/{id}")
-    public ArticleResponseDto update(@PathVariable Long id, @RequestBody ArticleRequestDto articleRequestDto) {
+    @ApiOperation("Change article and return changed object")
+    public ArticleResponseDto update(@PathVariable
+                                         @ApiParam("Id of object what you change")
+                                         Long id,
+                                     @RequestBody
+                                         @ApiParam("New name and price")
+                                         ArticleRequestDto articleRequestDto) {
         Article article = articleRequestDtoMapper.mapToModel(articleRequestDto);
         article.setId(id);
         return articleResponseDtoMapper.mapToDto(articleService.save(article));

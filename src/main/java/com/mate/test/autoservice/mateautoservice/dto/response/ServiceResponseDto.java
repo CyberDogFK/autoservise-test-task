@@ -1,9 +1,9 @@
 package com.mate.test.autoservice.mateautoservice.dto.response;
 
 import com.mate.test.autoservice.mateautoservice.model.ServiceStatus;
+import java.math.BigDecimal;
 import lombok.Getter;
 import lombok.Setter;
-import java.math.BigDecimal;
 
 @Getter
 @Setter

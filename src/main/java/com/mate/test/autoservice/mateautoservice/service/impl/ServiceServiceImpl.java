@@ -3,10 +3,8 @@ package com.mate.test.autoservice.mateautoservice.service.impl;
 import com.mate.test.autoservice.mateautoservice.model.Service;
 import com.mate.test.autoservice.mateautoservice.repository.ServiceRepository;
 import com.mate.test.autoservice.mateautoservice.service.ServiceService;
-import org.springframework.stereotype.Component;
-
-import java.math.BigDecimal;
 import java.util.List;
+import org.springframework.stereotype.Component;
 
 @Component
 public class ServiceServiceImpl implements ServiceService {

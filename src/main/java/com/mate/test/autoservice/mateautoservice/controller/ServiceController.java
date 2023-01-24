@@ -7,6 +7,8 @@ import com.mate.test.autoservice.mateautoservice.model.ServiceStatus;
 import com.mate.test.autoservice.mateautoservice.service.ServiceService;
 import com.mate.test.autoservice.mateautoservice.service.mapper.RequestDtoMapper;
 import com.mate.test.autoservice.mateautoservice.service.mapper.ResponseDtoMapper;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -23,30 +25,44 @@ public class ServiceController {
     private final ResponseDtoMapper<ServiceResponseDto, Service> serviceResponseDtoMapper;
 
     public ServiceController(ServiceService serviceService,
-                             RequestDtoMapper<ServiceRequestDto, Service> serviceRequestDtoMapper,
-                             ResponseDtoMapper<ServiceResponseDto, Service> serviceResponseDtoMapper) {
+                   RequestDtoMapper<ServiceRequestDto, Service> serviceRequestDtoMapper,
+                   ResponseDtoMapper<ServiceResponseDto, Service> serviceResponseDtoMapper) {
         this.serviceService = serviceService;
         this.serviceRequestDtoMapper = serviceRequestDtoMapper;
         this.serviceResponseDtoMapper = serviceResponseDtoMapper;
     }
 
     @PostMapping
-    public ServiceResponseDto create(@RequestBody ServiceRequestDto serviceRequestDto) {
+    @ApiOperation("Creat new service and return creating object")
+    public ServiceResponseDto create(@RequestBody
+                                         @ApiParam("Take name, masterId, price, serviceStatus")
+                                         ServiceRequestDto serviceRequestDto) {
         return serviceResponseDtoMapper.mapToDto(
                 serviceService.save(
                         serviceRequestDtoMapper.mapToModel(serviceRequestDto)));
     }
 
     @PutMapping("/{id}")
-    public ServiceResponseDto update(@PathVariable Long id, @RequestBody ServiceRequestDto serviceRequestDto) {
+    @ApiOperation("Change specific service")
+    public ServiceResponseDto update(@PathVariable
+                                         @ApiParam("Service id")
+                                         Long id,
+                                     @RequestBody
+                                         @ApiParam("Take object with new information, same in post")
+                                         ServiceRequestDto serviceRequestDto) {
         Service service = serviceRequestDtoMapper.mapToModel(serviceRequestDto);
         service.setId(id);
         return serviceResponseDtoMapper.mapToDto(serviceService.save(service));
     }
 
     @PutMapping("/{id}/status")
-    public ServiceResponseDto updateStatus(@PathVariable Long id,
-                                           @RequestParam ServiceStatus status) {
+    @ApiOperation("Change status of service")
+    public ServiceResponseDto updateStatus(@PathVariable
+                                               @ApiParam("Service id")
+                                               Long id,
+                                           @RequestParam
+                                               @ApiParam("Take status (PAID, NON_PAID)")
+                                               ServiceStatus status) {
         Service service = serviceService.getById(id);
         service.setStatus(status);
         return serviceResponseDtoMapper.mapToDto(serviceService.save(service));

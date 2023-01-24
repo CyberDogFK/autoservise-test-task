@@ -5,7 +5,7 @@ import com.mate.test.autoservice.mateautoservice.model.Service;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ServiceResponseDtoMapper implements ResponseDtoMapper<ServiceResponseDto, Service>{
+public class ServiceResponseDtoMapper implements ResponseDtoMapper<ServiceResponseDto, Service> {
     @Override
     public ServiceResponseDto mapToDto(Service model) {
         ServiceResponseDto responseDto = new ServiceResponseDto();

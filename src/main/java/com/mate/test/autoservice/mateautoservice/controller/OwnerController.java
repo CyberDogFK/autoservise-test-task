@@ -11,6 +11,9 @@ import com.mate.test.autoservice.mateautoservice.service.mapper.OrderResponseDto
 import com.mate.test.autoservice.mateautoservice.service.mapper.OwnerRequestDtoMapper;
 import com.mate.test.autoservice.mateautoservice.service.mapper.OwnerResponseDtoMapper;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,9 +21,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/owner")
@@ -33,7 +33,9 @@ public class OwnerController {
 
     public OwnerController(OwnerService ownerService,
                            OwnerRequestDtoMapper ownerRequestDtoMapper,
-                           OwnerResponseDtoMapper ownerResponseDtoMapper, OrderResponseDtoMapper orderResponseDtoMapper, CarResponseDtoMapper carResponseDtoMapper) {
+                           OwnerResponseDtoMapper ownerResponseDtoMapper,
+                           OrderResponseDtoMapper orderResponseDtoMapper,
+                           CarResponseDtoMapper carResponseDtoMapper) {
         this.ownerService = ownerService;
         this.ownerRequestDtoMapper = ownerRequestDtoMapper;
         this.ownerResponseDtoMapper = ownerResponseDtoMapper;
@@ -42,29 +44,43 @@ public class OwnerController {
     }
 
     @PostMapping
-    @ApiOperation("Creating owner")
-    public OwnerResponseDto create(@RequestBody OwnerRequestDto ownerRequestDto) {
+    @ApiOperation("Creating owner and return creating object")
+    public OwnerResponseDto create(@RequestBody
+                                       @ApiParam("Get cars ids and orders ids")
+                                       OwnerRequestDto ownerRequestDto) {
         return ownerResponseDtoMapper.mapToDto(
                 ownerService.save(
                         ownerRequestDtoMapper.mapToModel(ownerRequestDto)));
     }
 
     @PutMapping("/{id}")
-    public OwnerResponseDto update(@PathVariable Long id, @RequestBody OwnerRequestDto ownerRequestDto) {
+    @ApiOperation("Update information about owner")
+    public OwnerResponseDto update(@PathVariable
+                                       @ApiParam("Id of owner")
+                                       Long id,
+                                   @RequestBody
+                                       @ApiParam("Take new information about owner")
+                                       OwnerRequestDto ownerRequestDto) {
         Owner owner = ownerRequestDtoMapper.mapToModel(ownerRequestDto);
         owner.setId(id);
         return ownerResponseDtoMapper.mapToDto(ownerService.save(owner));
     }
 
     @GetMapping("/{id}/orders")
-    public List<OrderResponseDto> getOrdersOf(@PathVariable Long id) {
+    @ApiParam("Return orders of specific owner")
+    public List<OrderResponseDto> getOrdersOf(@PathVariable
+                                                  @ApiParam("Owner id")
+                                                  Long id) {
         return ownerService.getOrdersOfOwner(id).stream()
                 .map(orderResponseDtoMapper::mapToDto)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}/cars")
-    public List<CarResponseDto> getOwnerCars(@PathVariable Long id) {
+    @ApiOperation("Return cars of specific owner")
+    public List<CarResponseDto> getOwnerCars(@PathVariable
+                                                 @ApiParam("Owner id")
+                                                 Long id) {
         return ownerService.getById(id).getCars().stream()
                 .map(carResponseDtoMapper::mapToDto)
                 .collect(Collectors.toList());

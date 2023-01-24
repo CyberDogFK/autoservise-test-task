@@ -4,12 +4,11 @@ import com.mate.test.autoservice.mateautoservice.dto.response.OrderResponseDto;
 import com.mate.test.autoservice.mateautoservice.model.Article;
 import com.mate.test.autoservice.mateautoservice.model.Order;
 import com.mate.test.autoservice.mateautoservice.model.Service;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
-import java.util.stream.Collectors;
-
 @Component
-public class OrderResponseDtoMapper implements ResponseDtoMapper<OrderResponseDto, Order>{
+public class OrderResponseDtoMapper implements ResponseDtoMapper<OrderResponseDto, Order> {
     @Override
     public OrderResponseDto mapToDto(Order order) {
         OrderResponseDto responseDto = new OrderResponseDto();

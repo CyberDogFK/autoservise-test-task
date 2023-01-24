@@ -1,10 +1,7 @@
 package com.mate.test.autoservice.mateautoservice.controller;
 
-import com.mate.test.autoservice.mateautoservice.dto.request.ArticleRequestDto;
 import com.mate.test.autoservice.mateautoservice.dto.request.OrderRequestDto;
-import com.mate.test.autoservice.mateautoservice.dto.response.ArticleResponseDto;
 import com.mate.test.autoservice.mateautoservice.dto.response.OrderResponseDto;
-import com.mate.test.autoservice.mateautoservice.model.Article;
 import com.mate.test.autoservice.mateautoservice.model.Order;
 import com.mate.test.autoservice.mateautoservice.model.OrderStatus;
 import com.mate.test.autoservice.mateautoservice.model.Owner;
@@ -14,9 +11,12 @@ import com.mate.test.autoservice.mateautoservice.service.CarService;
 import com.mate.test.autoservice.mateautoservice.service.MasterService;
 import com.mate.test.autoservice.mateautoservice.service.OrderService;
 import com.mate.test.autoservice.mateautoservice.service.OwnerService;
-import com.mate.test.autoservice.mateautoservice.service.ServiceService;
 import com.mate.test.autoservice.mateautoservice.service.mapper.RequestDtoMapper;
 import com.mate.test.autoservice.mateautoservice.service.mapper.ResponseDtoMapper;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import java.math.BigDecimal;
+import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,9 +26,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigDecimal;
-import java.util.List;
-
 @RestController
 @RequestMapping("/order")
 public class OrderController {
@@ -36,32 +33,32 @@ public class OrderController {
     private final ArticleService articleService;
     private final ResponseDtoMapper<OrderResponseDto, Order> orderResponseDtoMapper;
     private final RequestDtoMapper<OrderRequestDto, Order> orderRequestDtoMapper;
-    private final RequestDtoMapper<ArticleRequestDto, Article> articleRequestDtoMapper;
-    private final ResponseDtoMapper<ArticleResponseDto, Article> articleResponseDtoMapper;
-    private final ServiceService serviceService;
     private final CarService carService;
     private final OwnerService ownerService;
     private final MasterService masterService;
 
-    public OrderController(OrderService orderService, ArticleService articleService, ResponseDtoMapper<OrderResponseDto,
-            Order> orderResponseDtoMapper, RequestDtoMapper<OrderRequestDto,
-            Order> orderRequestDtoMapper, RequestDtoMapper<ArticleRequestDto,
-            Article> articleRequestDtoMapper, ResponseDtoMapper<ArticleResponseDto,
-            Article> articleResponseDtoMapper, ServiceService serviceService, CarService carService, OwnerService ownerService, MasterService masterService) {
+    public OrderController(OrderService orderService, ArticleService articleService,
+            ResponseDtoMapper<OrderResponseDto, Order> orderResponseDtoMapper,
+            RequestDtoMapper<OrderRequestDto, Order> orderRequestDtoMapper,
+            CarService carService, OwnerService ownerService,
+            MasterService masterService) {
         this.orderService = orderService;
         this.articleService = articleService;
         this.orderResponseDtoMapper = orderResponseDtoMapper;
         this.orderRequestDtoMapper = orderRequestDtoMapper;
-        this.articleRequestDtoMapper = articleRequestDtoMapper;
-        this.articleResponseDtoMapper = articleResponseDtoMapper;
-        this.serviceService = serviceService;
         this.carService = carService;
         this.ownerService = ownerService;
         this.masterService = masterService;
     }
 
     @PostMapping
-    public OrderResponseDto create(@RequestBody OrderRequestDto orderRequestDto) {
+    @ApiOperation("Creating new order ")
+    public OrderResponseDto create(@RequestBody
+            @ApiParam("Take carId, problemDescription string, "
+                    + "acceptance date (in pattern yyyy-MM-dd, "
+                    + "serviceIds array, articleIds array, Status (orderStatus), "
+                    + "completeDate (in pattern yyyy-MM-dd)")
+                                       OrderRequestDto orderRequestDto) {
         Owner owner = carService.getById(orderRequestDto.getCarId())
                 .getOwner();
         Order order = orderRequestDtoMapper.mapToModel(orderRequestDto);
@@ -76,8 +73,13 @@ public class OrderController {
     }
 
     @PostMapping("/{id}/article")
-    public OrderResponseDto addArticleToOrder(@PathVariable Long id,
-                                              @RequestBody List<Long> articleIds) {
+    @ApiOperation("Add new articles to order")
+    public OrderResponseDto addArticleToOrder(@PathVariable
+                                                  @ApiParam("Order id")
+                                                  Long id,
+                                              @RequestBody
+                                                  @ApiParam("Array of article ids for adding")
+                                                  List<Long> articleIds) {
         articleService.getAllByIds(articleIds)
                 .stream().peek(System.out::println)
                 .forEach(a -> orderService.addArticleForOrder(a, id));
@@ -85,7 +87,14 @@ public class OrderController {
     }
 
     @PutMapping("/{id}")
-    public OrderResponseDto update(@PathVariable Long id, @RequestBody OrderRequestDto orderRequestDto) {
+    @ApiOperation("Change specific order")
+    public OrderResponseDto update(@PathVariable
+                                       @ApiParam("Id of changeable order")
+                                       Long id,
+                                   @RequestBody
+                                       @ApiParam("Take new params of object,"
+                                               + " same as in post request")
+                                       OrderRequestDto orderRequestDto) {
         Owner owner = carService.getById(orderRequestDto.getCarId())
                 .getOwner();
         ownerService.save(owner);
@@ -102,8 +111,16 @@ public class OrderController {
     }
 
     @PutMapping("/{id}/status")
-    public OrderResponseDto updateStatus(@PathVariable Long id,
-                                         @RequestParam OrderStatus orderStatus) {
+    @ApiOperation("Change status of order")
+    public OrderResponseDto updateStatus(@PathVariable
+                                             @ApiParam("Id of order")
+                                             Long id,
+                                         @RequestParam @ApiParam("One of orderStatus (ACCEPTED, "
+                                                 + "IN_PROCESS, "
+                                                 + "COMPLETED, "
+                                                 + "FAIL_COMPLETED, "
+                                                 + "PAID_FOR)")
+                                             OrderStatus orderStatus) {
         Order order = orderService.getById(id);
         order.setStatus(orderStatus);
         if (orderStatus.equals(OrderStatus.COMPLETED)) {
@@ -118,7 +135,10 @@ public class OrderController {
     }
 
     @GetMapping("/{id}/price")
-    public BigDecimal getPriceOf(@PathVariable Long id) {
+    @ApiOperation("Return price of order")
+    public BigDecimal getPriceOf(@PathVariable
+                                     @ApiParam("Id of order")
+                                     Long id) {
         return orderService.getPriceOfOrder(id);
     }
 }

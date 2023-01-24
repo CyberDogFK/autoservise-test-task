@@ -1,8 +1,6 @@
 package com.mate.test.autoservice.mateautoservice.service;
 
 import com.mate.test.autoservice.mateautoservice.model.Service;
-
-import java.math.BigDecimal;
 import java.util.List;
 
 public interface ServiceService {

@@ -3,12 +3,11 @@ package com.mate.test.autoservice.mateautoservice.service.mapper;
 import com.mate.test.autoservice.mateautoservice.dto.response.MasterResponseDto;
 import com.mate.test.autoservice.mateautoservice.model.Master;
 import com.mate.test.autoservice.mateautoservice.model.Order;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
-import java.util.stream.Collectors;
-
 @Component
-public class MasterResponseDtoMapper implements ResponseDtoMapper<MasterResponseDto, Master>{
+public class MasterResponseDtoMapper implements ResponseDtoMapper<MasterResponseDto, Master> {
     @Override
     public MasterResponseDto mapToDto(Master model) {
         MasterResponseDto masterDto = new MasterResponseDto();
