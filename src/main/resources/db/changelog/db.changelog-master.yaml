@@ -1,0 +1,37 @@
+databaseChangeLog:
+  - include:
+      file: /db/changelog/changes/sequences/create-article-seq.sql
+  - include:
+      file: /db/changelog/changes/sequences/create-car-seq.sql
+  - include:
+      file: /db/changelog/changes/sequences/create-master-seq.sql
+  - include:
+      file: /db/changelog/changes/sequences/create-order-seq.sql
+  - include:
+      file: /db/changelog/changes/sequences/create-owner-seq.sql
+  - include:
+      file: /db/changelog/changes/sequences/create-service-seq.sql
+#
+  - include:
+      file: /db/changelog/changes/tables/create-article-table.sql
+  - include:
+      file: /db/changelog/changes/tables/create-owner-table.sql
+  - include:
+      file: /db/changelog/changes/tables/create-car-table.sql
+  - include:
+      file: /db/changelog/changes/tables/create-orders-table.sql
+  - include:
+      file: /db/changelog/changes/tables/create-master-table.sql
+  - include:
+      file: /db/changelog/changes/tables/create-service-table.sql
+  - include:
+      file: /db/changelog/changes/tables/create-master-solved-orders-table.sql
+  - include:
+      file: /db/changelog/changes/tables/create-orders-articles-table.sql
+  - include:
+      file: /db/changelog/changes/tables/create-orders-services-table.sql
+  - include:
+      file: /db/changelog/changes/tables/create-owner-cars-table.sql
+  - include:
+      file: /db/changelog/changes/tables/create-owner-orders-table.sql
+
