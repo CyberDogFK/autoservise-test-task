@@ -13,8 +13,8 @@ import com.mate.test.autoservice.mateautoservice.service.OrderService;
 import com.mate.test.autoservice.mateautoservice.service.OwnerService;
 import com.mate.test.autoservice.mateautoservice.service.mapper.RequestDtoMapper;
 import com.mate.test.autoservice.mateautoservice.service.mapper.ResponseDtoMapper;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import java.math.BigDecimal;
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,9 +52,9 @@ public class OrderController {
     }
 
     @PostMapping
-    @ApiOperation("Creating new order ")
+    @Operation(description = "Creating new order ")
     public OrderResponseDto create(@RequestBody
-            @ApiParam("Take carId, problemDescription string, "
+            @Parameter(description = "Take carId, problemDescription string, "
                     + "acceptance date (in pattern yyyy-MM-dd, "
                     + "serviceIds array, articleIds array, Status (orderStatus), "
                     + "completeDate (in pattern yyyy-MM-dd)")
@@ -73,12 +73,13 @@ public class OrderController {
     }
 
     @PostMapping("/{id}/article")
-    @ApiOperation("Add new articles to order")
+    @Operation(description = "Add new articles to order")
     public OrderResponseDto addArticleToOrder(@PathVariable
-                                                  @ApiParam("Order id")
+                                                  @Parameter(description = "Order id")
                                                   Long id,
                                               @RequestBody
-                                                  @ApiParam("Array of article ids for adding")
+                                                  @Parameter(description =
+                                                          "Array of article ids for adding")
                                                   List<Long> articleIds) {
         articleService.getAllByIds(articleIds)
                 .stream().peek(System.out::println)
@@ -87,12 +88,12 @@ public class OrderController {
     }
 
     @PutMapping("/{id}")
-    @ApiOperation("Change specific order")
+    @Operation(description = "Change specific order")
     public OrderResponseDto update(@PathVariable
-                                       @ApiParam("Id of changeable order")
+                                       @Parameter(description = "Id of changeable order")
                                        Long id,
                                    @RequestBody
-                                       @ApiParam("Take new params of object,"
+                                       @Parameter(description = "Take new params of object,"
                                                + " same as in post request")
                                        OrderRequestDto orderRequestDto) {
         Owner owner = carService.getById(orderRequestDto.getCarId())
@@ -111,11 +112,13 @@ public class OrderController {
     }
 
     @PutMapping("/{id}/status")
-    @ApiOperation("Change status of order")
+    @Operation(description = "Change status of order")
     public OrderResponseDto updateStatus(@PathVariable
-                                             @ApiParam("Id of order")
+                                             @Parameter(description = "Id of order")
                                              Long id,
-                                         @RequestParam @ApiParam("One of orderStatus (ACCEPTED, "
+                                         @RequestParam
+                                             @Parameter(description =
+                                                     "One of orderStatus (ACCEPTED, "
                                                  + "IN_PROCESS, "
                                                  + "COMPLETED, "
                                                  + "FAIL_COMPLETED, "
@@ -135,9 +138,9 @@ public class OrderController {
     }
 
     @GetMapping("/{id}/price")
-    @ApiOperation("Return price of order")
+    @Operation(description = "Return price of order")
     public BigDecimal getPriceOf(@PathVariable
-                                     @ApiParam("Id of order")
+                                     @Parameter(description = "Id of order")
                                      Long id) {
         return orderService.getPriceOfOrder(id);
     }

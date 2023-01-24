@@ -8,8 +8,8 @@ import com.mate.test.autoservice.mateautoservice.service.CarService;
 import com.mate.test.autoservice.mateautoservice.service.OwnerService;
 import com.mate.test.autoservice.mateautoservice.service.mapper.RequestDtoMapper;
 import com.mate.test.autoservice.mateautoservice.service.mapper.ResponseDtoMapper;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -36,9 +36,9 @@ public class CarController {
     }
 
     @PostMapping
-    @ApiOperation("Save new car into Db")
+    @Operation(description = "Save new car into Db")
     public CarResponseDto save(@RequestBody
-                                   @ApiParam("Car data, with id of some params")
+                                   @Parameter(description = "Car data, with id of some params")
                                    CarRequestDto carRequestDto) {
         Car saved = carService.save(carRequestDtoMapper
                 .mapToModel(carRequestDto));
@@ -49,12 +49,12 @@ public class CarController {
     }
 
     @PutMapping("/{id}")
-    @ApiOperation("Update information about car with id")
+    @Operation(description = "Update information about car with id")
     public CarResponseDto update(@PathVariable
-                                     @ApiParam("Id of car what you change")
+                                     @Parameter(description = "Id of car what you change")
                                      Long id,
                                  @RequestBody
-                                    @ApiParam("New information of car")
+                                    @Parameter(description = "New information of car")
                                     CarRequestDto carRequestDto) {
         Car car = carRequestDtoMapper.mapToModel(carRequestDto);
         car.setId(id);

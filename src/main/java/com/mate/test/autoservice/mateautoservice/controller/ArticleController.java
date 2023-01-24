@@ -6,8 +6,8 @@ import com.mate.test.autoservice.mateautoservice.model.Article;
 import com.mate.test.autoservice.mateautoservice.service.ArticleService;
 import com.mate.test.autoservice.mateautoservice.service.mapper.RequestDtoMapper;
 import com.mate.test.autoservice.mateautoservice.service.mapper.ResponseDtoMapper;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -32,9 +32,9 @@ public class ArticleController {
     }
 
     @PostMapping
-    @ApiOperation("Creating article and return creating object")
+    @Operation(description = "Creating article and return creating object")
     public ArticleResponseDto create(@RequestBody
-                                         @ApiParam("Get name and price")
+                                         @Parameter(description = "Get name and price")
                                          ArticleRequestDto articleRequestDto) {
         return articleResponseDtoMapper.mapToDto(
                 articleService.save(
@@ -42,12 +42,12 @@ public class ArticleController {
     }
 
     @PutMapping("/{id}")
-    @ApiOperation("Change article and return changed object")
+    @Operation(description = "Change article and return changed object")
     public ArticleResponseDto update(@PathVariable
-                                         @ApiParam("Id of object what you change")
+                                         @Parameter(description = "Id of object what you change")
                                          Long id,
                                      @RequestBody
-                                         @ApiParam("New name and price")
+                                         @Parameter(description = "New name and price")
                                          ArticleRequestDto articleRequestDto) {
         Article article = articleRequestDtoMapper.mapToModel(articleRequestDto);
         article.setId(id);

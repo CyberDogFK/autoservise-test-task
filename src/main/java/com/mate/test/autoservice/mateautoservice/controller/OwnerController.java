@@ -10,8 +10,8 @@ import com.mate.test.autoservice.mateautoservice.service.mapper.CarResponseDtoMa
 import com.mate.test.autoservice.mateautoservice.service.mapper.OrderResponseDtoMapper;
 import com.mate.test.autoservice.mateautoservice.service.mapper.OwnerRequestDtoMapper;
 import com.mate.test.autoservice.mateautoservice.service.mapper.OwnerResponseDtoMapper;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,9 +44,9 @@ public class OwnerController {
     }
 
     @PostMapping
-    @ApiOperation("Creating owner and return creating object")
+    @Operation(description = "Creating owner and return creating object")
     public OwnerResponseDto create(@RequestBody
-                                       @ApiParam("Get cars ids and orders ids")
+                                       @Parameter(description = "Get cars ids and orders ids")
                                        OwnerRequestDto ownerRequestDto) {
         return ownerResponseDtoMapper.mapToDto(
                 ownerService.save(
@@ -54,12 +54,12 @@ public class OwnerController {
     }
 
     @PutMapping("/{id}")
-    @ApiOperation("Update information about owner")
+    @Operation(description = "Update information about owner")
     public OwnerResponseDto update(@PathVariable
-                                       @ApiParam("Id of owner")
+                                       @Parameter(description = "Id of owner")
                                        Long id,
                                    @RequestBody
-                                       @ApiParam("Take new information about owner")
+                                       @Parameter(description = "Take new information about owner")
                                        OwnerRequestDto ownerRequestDto) {
         Owner owner = ownerRequestDtoMapper.mapToModel(ownerRequestDto);
         owner.setId(id);
@@ -67,9 +67,9 @@ public class OwnerController {
     }
 
     @GetMapping("/{id}/orders")
-    @ApiParam("Return orders of specific owner")
+    @Operation(description = "Return orders of specific owner")
     public List<OrderResponseDto> getOrdersOf(@PathVariable
-                                                  @ApiParam("Owner id")
+                                                  @Parameter(description = "Owner id")
                                                   Long id) {
         return ownerService.getOrdersOfOwner(id).stream()
                 .map(orderResponseDtoMapper::mapToDto)
@@ -77,9 +77,9 @@ public class OwnerController {
     }
 
     @GetMapping("/{id}/cars")
-    @ApiOperation("Return cars of specific owner")
+    @Operation(description = "Return cars of specific owner")
     public List<CarResponseDto> getOwnerCars(@PathVariable
-                                                 @ApiParam("Owner id")
+                                                 @Parameter(description = "Owner id")
                                                  Long id) {
         return ownerService.getById(id).getCars().stream()
                 .map(carResponseDtoMapper::mapToDto)

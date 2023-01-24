@@ -7,8 +7,8 @@ import com.mate.test.autoservice.mateautoservice.model.ServiceStatus;
 import com.mate.test.autoservice.mateautoservice.service.ServiceService;
 import com.mate.test.autoservice.mateautoservice.service.mapper.RequestDtoMapper;
 import com.mate.test.autoservice.mateautoservice.service.mapper.ResponseDtoMapper;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -33,9 +33,10 @@ public class ServiceController {
     }
 
     @PostMapping
-    @ApiOperation("Creat new service and return creating object")
+    @Operation(description = "Creat new service and return creating object")
     public ServiceResponseDto create(@RequestBody
-                                         @ApiParam("Take name, masterId, price, serviceStatus")
+                                         @Parameter(description =
+                                                 "Take name, masterId, price, serviceStatus")
                                          ServiceRequestDto serviceRequestDto) {
         return serviceResponseDtoMapper.mapToDto(
                 serviceService.save(
@@ -43,12 +44,13 @@ public class ServiceController {
     }
 
     @PutMapping("/{id}")
-    @ApiOperation("Change specific service")
+    @Operation(description = "Change specific service")
     public ServiceResponseDto update(@PathVariable
-                                         @ApiParam("Service id")
+                                         @Parameter(description = "Service id")
                                          Long id,
                                      @RequestBody
-                                         @ApiParam("Take object with new information, same in post")
+                                         @Parameter(description =
+                                                 "Take object with new information, same in post")
                                          ServiceRequestDto serviceRequestDto) {
         Service service = serviceRequestDtoMapper.mapToModel(serviceRequestDto);
         service.setId(id);
@@ -56,12 +58,13 @@ public class ServiceController {
     }
 
     @PutMapping("/{id}/status")
-    @ApiOperation("Change status of service")
+    @Operation(description = "Change status of service")
     public ServiceResponseDto updateStatus(@PathVariable
-                                               @ApiParam("Service id")
+                                               @Parameter(description = "Service id")
                                                Long id,
                                            @RequestParam
-                                               @ApiParam("Take status (PAID, NON_PAID)")
+                                               @Parameter(description =
+                                                       "Take status (PAID, NON_PAID)")
                                                ServiceStatus status) {
         Service service = serviceService.getById(id);
         service.setStatus(status);

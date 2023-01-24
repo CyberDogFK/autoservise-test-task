@@ -8,8 +8,8 @@ import com.mate.test.autoservice.mateautoservice.service.MasterService;
 import com.mate.test.autoservice.mateautoservice.service.mapper.OrderResponseDtoMapper;
 import com.mate.test.autoservice.mateautoservice.service.mapper.RequestDtoMapper;
 import com.mate.test.autoservice.mateautoservice.service.mapper.ResponseDtoMapper;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,9 +39,9 @@ public class MasterController {
     }
 
     @PostMapping
-    @ApiOperation("Create master and return created master with id")
+    @Operation(description = "Create master and return created master with id")
     public MasterResponseDto create(@RequestBody
-                                        @ApiParam("Information about master")
+                                        @Parameter(description = "Information about master")
                                         MasterRequestDto requestDto) {
         return masterResponseDtoMapper.mapToDto(
                 masterService.save(
@@ -49,12 +49,13 @@ public class MasterController {
     }
 
     @PutMapping("/{id}")
-    @ApiOperation("Change information about master with id from path")
+    @Operation(description = "Change information about master with id from path")
     public MasterResponseDto update(@PathVariable
-                                    @ApiParam("Master id, information about who we want to change")
+                                    @Parameter(description =
+                                            "Master id, information about who we want to change")
                                         Long id,
                                     @RequestBody
-                                    @ApiParam("New information about master")
+                                    @Parameter(description = "New information about master")
                                         MasterRequestDto requestDto) {
         Master master = masterRequestDtoMapper.mapToModel(requestDto);
         master.setId(id);
@@ -62,9 +63,9 @@ public class MasterController {
     }
 
     @GetMapping("/{id}/orders")
-    @ApiOperation("Find master orders by master id")
+    @Operation(description = "Find master orders by master id")
     public List<OrderResponseDto> getById(@PathVariable
-                                              @ApiParam("Id of master")
+                                              @Parameter(description = "Id of master")
                                               Long id) {
         return masterService.getById(id).getSolvedOrders().stream()
                 .map(orderResponseDtoMapper::mapToDto)
@@ -72,8 +73,10 @@ public class MasterController {
     }
 
     @GetMapping("/{id}/salary")
+    @Operation(description = "calculate all non paid services of master, "
+            + "return payment, and change all statuses to paid")
     public Double calculateAndGiveSalary(@PathVariable
-                                             @ApiParam("Id of master")
+                                             @Parameter(description = "Id of master")
                                              Long id) {
         return masterService.paidForServicesForMaster(id);
     }
