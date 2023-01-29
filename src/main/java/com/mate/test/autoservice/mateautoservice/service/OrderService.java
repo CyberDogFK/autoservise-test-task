@@ -14,9 +14,7 @@ public interface OrderService {
 
     List<Order> getAllByIds(List<Long> ids);
 
-    Order addArticleForOrder(Article article, Long id);
+    Order addArticleForOrder(List<Article> articles, Order order);
 
-    BigDecimal getPriceOfOrder(Long id);
-
-    BigDecimal getPriceWithDiscount(List<Long> articleIds, Long ownerId);
+    BigDecimal getPriceWithDiscount(Order order);
 }

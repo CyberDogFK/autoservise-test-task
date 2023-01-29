@@ -20,12 +20,12 @@ public class OwnerRequestDtoMapper implements RequestDtoMapper<OwnerRequestDto, 
     @Override
     public Owner mapToModel(OwnerRequestDto dto) {
         Owner owner = new Owner();
-        if (dto.getCarsIds() != null) {
+        if (dto.getCarsIds() != null && !dto.getCarsIds().isEmpty()) {
             owner.setCars(carService.getAllByIds(dto.getCarsIds()));
         } else {
             owner.setCars(List.of());
         }
-        if (dto.getOrdersIds() != null) {
+        if (dto.getOrdersIds() != null && !dto.getOrdersIds().isEmpty()) {
             owner.setOrders(orderService.getAllByIds(dto.getOrdersIds()));
         } else {
             owner.setOrders(List.of());

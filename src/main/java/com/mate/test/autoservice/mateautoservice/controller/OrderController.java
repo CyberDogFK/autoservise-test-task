@@ -2,6 +2,7 @@ package com.mate.test.autoservice.mateautoservice.controller;
 
 import com.mate.test.autoservice.mateautoservice.dto.request.OrderRequestDto;
 import com.mate.test.autoservice.mateautoservice.dto.response.OrderResponseDto;
+import com.mate.test.autoservice.mateautoservice.model.Article;
 import com.mate.test.autoservice.mateautoservice.model.Order;
 import com.mate.test.autoservice.mateautoservice.model.OrderStatus;
 import com.mate.test.autoservice.mateautoservice.model.Owner;
@@ -17,6 +18,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import java.math.BigDecimal;
 import java.util.List;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -52,6 +55,7 @@ public class OrderController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     @Operation(description = "Creating new order ")
     public OrderResponseDto create(@RequestBody
             @Parameter(description = "Take carId, problemDescription string, "
@@ -62,12 +66,10 @@ public class OrderController {
         Owner owner = carService.getById(orderRequestDto.getCarId())
                 .getOwner();
         Order order = orderRequestDtoMapper.mapToModel(orderRequestDto);
-        order.setPrice(orderService.getPriceWithDiscount(orderRequestDto.getArticlesIds(),
-                owner.getId()));
+        order.setPrice(orderService.getPriceWithDiscount(order));
         List<Order> orders = owner.getOrders();
         orders.add(order);
         owner.setOrders(orders);
-        ownerService.save(owner);
         return orderResponseDtoMapper.mapToDto(
                 orderService.save(order));
     }
@@ -81,10 +83,10 @@ public class OrderController {
                                                   @Parameter(description =
                                                           "Array of article ids for adding")
                                                   List<Long> articleIds) {
-        articleService.getAllByIds(articleIds)
-                .stream().peek(System.out::println)
-                .forEach(a -> orderService.addArticleForOrder(a, id));
-        return orderResponseDtoMapper.mapToDto(orderService.getById(id));
+        Order order = orderService.getById(id);
+        List<Article> articlesToSave = articleService.getAllByIds(articleIds);
+        return orderResponseDtoMapper.mapToDto(orderService.save(
+                orderService.addArticleForOrder(articlesToSave, order)));
     }
 
     @PutMapping("/{id}")
@@ -101,8 +103,8 @@ public class OrderController {
         ownerService.save(owner);
         Order order = orderRequestDtoMapper.mapToModel(orderRequestDto);
         order.setId(id);
-        order.setPrice(orderService.getPriceWithDiscount(orderRequestDto.getArticlesIds(),
-                owner.getId()));
+        BigDecimal priceWithDiscount = orderService.getPriceWithDiscount(order);
+        order.setPrice(priceWithDiscount);
         List<Order> orders = owner.getOrders();
         if (!orders.contains(order)) {
             orders.add(order);
@@ -142,6 +144,6 @@ public class OrderController {
     public BigDecimal getPriceOf(@PathVariable
                                      @Parameter(description = "Id of order")
                                      Long id) {
-        return orderService.getPriceOfOrder(id);
+        return orderService.getById(id).getPrice();
     }
 }
