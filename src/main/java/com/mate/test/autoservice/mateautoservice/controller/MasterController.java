@@ -10,14 +10,17 @@ import com.mate.test.autoservice.mateautoservice.service.mapper.RequestDtoMapper
 import com.mate.test.autoservice.mateautoservice.service.mapper.ResponseDtoMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -39,6 +42,7 @@ public class MasterController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     @Operation(description = "Create master and return created master with id")
     public MasterResponseDto create(@RequestBody
                                         @Parameter(description = "Information about master")
@@ -75,7 +79,7 @@ public class MasterController {
     @GetMapping("/{id}/salary")
     @Operation(description = "calculate all non paid services of master, "
             + "return payment, and change all statuses to paid")
-    public Double calculateAndGiveSalary(@PathVariable
+    public BigDecimal calculateAndGiveSalary(@PathVariable
                                              @Parameter(description = "Id of master")
                                              Long id) {
         return masterService.paidForServicesForMaster(id);

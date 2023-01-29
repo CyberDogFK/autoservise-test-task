@@ -2,12 +2,15 @@ package com.mate.test.autoservice.mateautoservice.service.impl;
 
 import com.mate.test.autoservice.mateautoservice.model.Article;
 import com.mate.test.autoservice.mateautoservice.model.Order;
+import com.mate.test.autoservice.mateautoservice.model.Owner;
 import com.mate.test.autoservice.mateautoservice.repository.OrderRepository;
 import com.mate.test.autoservice.mateautoservice.service.ArticleService;
+import com.mate.test.autoservice.mateautoservice.service.CarService;
 import com.mate.test.autoservice.mateautoservice.service.OrderService;
 import com.mate.test.autoservice.mateautoservice.service.OwnerService;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,13 +20,15 @@ public class OrderServiceImpl implements OrderService {
     private final ArticleService articleService;
     private final OrderRepository orderRepository;
     private final OwnerService ownerService;
+    private final CarService carService;
 
     public OrderServiceImpl(ArticleService articleService,
                             OrderRepository orderRepository,
-                            OwnerService ownerService) {
+                            OwnerService ownerService, CarService carService) {
         this.articleService = articleService;
         this.orderRepository = orderRepository;
         this.ownerService = ownerService;
+        this.carService = carService;
     }
 
     @Override
@@ -43,19 +48,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order addArticleForOrder(Article article, Long id) {
-        //orderRepository.updateArticleForOrder(article, id);
-        Order byId = getById(id);
-        byId.getArticles().add(article);
-        return orderRepository.save(byId);
-    }
-
-    @Override
-    public BigDecimal getPriceOfOrder(Long id) {
-        Order order = getById(id);
-        return BigDecimal.valueOf(order.getServices().stream()
-                .mapToDouble(s -> s.getPrice().doubleValue())
-                .sum());
+    public Order addArticleForOrder(List<Article> articles, Order order) {
+        articles.forEach(a -> order.getArticles().add(a));
+        return order;
     }
 
     @Override
@@ -68,9 +63,13 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public BigDecimal getPriceWithDiscount(List<Long> articleIds, Long ownerId) {
-        double priceOfServices = getDiscountForOrders(ownerId);
-        double priceOfArticles = getPriceOfArticles(articleIds);
+    public BigDecimal getPriceWithDiscount(Order order) {
+        Owner owner = carService.getById(order.getCar().getId())
+                .getOwner();
+        double priceOfServices = getDiscountForOrders(owner.getId());
+        double priceOfArticles = getPriceOfArticles(order.getArticles().stream()
+                .map(Article::getId)
+                .collect(Collectors.toList()));
         return BigDecimal.valueOf(priceOfServices + priceOfArticles);
     }
 

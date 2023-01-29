@@ -27,10 +27,6 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public List<Car> getAllByIds(List<Long> ids) {
-        List<Car> allById = carRepository.findAllById(ids);
-        if (allById.isEmpty()) {
-            throw new RuntimeException("Can't find any car by ids " + ids);
-        }
-        return allById;
+        return carRepository.findAllById(ids);
     }
 }

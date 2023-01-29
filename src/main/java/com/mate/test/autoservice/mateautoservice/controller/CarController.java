@@ -10,11 +10,13 @@ import com.mate.test.autoservice.mateautoservice.service.mapper.RequestDtoMapper
 import com.mate.test.autoservice.mateautoservice.service.mapper.ResponseDtoMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -36,6 +38,7 @@ public class CarController {
     }
 
     @PostMapping
+    @ResponseStatus(code = HttpStatus.CREATED)
     @Operation(description = "Save new car into Db")
     public CarResponseDto save(@RequestBody
                                    @Parameter(description = "Car data, with id of some params")

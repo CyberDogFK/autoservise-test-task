@@ -13,12 +13,17 @@ import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "orders")
 public class Order {
     @Id
@@ -39,4 +44,51 @@ public class Order {
     private OrderStatus status;
     private BigDecimal price;
     private LocalDate completeDate;
+
+    public Order(Car car, String problemDescription,
+                 LocalDate acceptanceDate, List<Service> services,
+                 List<Article> articles, OrderStatus status, LocalDate completeDate) {
+        this.car = car;
+        this.problemDescription = problemDescription;
+        this.acceptanceDate = acceptanceDate;
+        this.services = services;
+        this.articles = articles;
+        this.status = status;
+        this.completeDate = completeDate;
+    }
+
+    public Order(Car car, String problemDescription, LocalDate acceptanceDate,
+                 List<Service> services, List<Article> articles,
+                 OrderStatus status, BigDecimal price, LocalDate completeDate) {
+        this.car = car;
+        this.problemDescription = problemDescription;
+        this.acceptanceDate = acceptanceDate;
+        this.services = services;
+        this.articles = articles;
+        this.status = status;
+        this.price = price;
+        this.completeDate = completeDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Order order = (Order) o;
+        return Objects.equals(id, order.id)
+                && Objects.equals(problemDescription, order.problemDescription)
+                && Objects.equals(acceptanceDate, order.acceptanceDate)
+                && status == order.status
+                && Objects.equals(price, order.price)
+                && Objects.equals(completeDate, order.completeDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, problemDescription, acceptanceDate, status, price, completeDate);
+    }
 }

@@ -12,6 +12,7 @@ import com.mate.test.autoservice.mateautoservice.service.MasterService;
 import com.mate.test.autoservice.mateautoservice.service.OrderService;
 import com.mate.test.autoservice.mateautoservice.service.ServiceService;
 import jakarta.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
@@ -50,7 +51,7 @@ public class MasterServiceImpl implements MasterService {
 
     @Transactional
     @Override
-    public Double paidForServicesForMaster(Long id) {
+    public BigDecimal paidForServicesForMaster(Long id) {
         List<Service> notPaidServices = getNotPaidServicesForMaster(id);
         double result = notPaidServices.stream()
                 .peek(s -> s.setStatus(PAID))
@@ -70,7 +71,7 @@ public class MasterServiceImpl implements MasterService {
             }
         }
         orderService.saveAll(notPaidOrders);
-        return result;
+        return BigDecimal.valueOf(result);
     }
 
     @Override
