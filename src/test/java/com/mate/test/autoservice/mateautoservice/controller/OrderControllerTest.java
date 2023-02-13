@@ -113,7 +113,7 @@ public class OrderControllerTest {
                 .body(new OrderRequestDto(savedOrder.getCar().getId(),
                         savedOrder.getProblemDescription(), savedOrder.getAcceptanceDate(),
                         serviceIds, articleIds,
-                        savedOrder.getStatus().name(), savedOrder.getCompleteDate()))
+                        savedOrder.getStatus(), savedOrder.getCompleteDate()))
                 .when()
                 .post(CONTROLLER_URL)
                 .then()
@@ -196,7 +196,7 @@ public class OrderControllerTest {
                 .body(new OrderRequestDto(savedOrder.getCar().getId(),
                         savedOrder.getProblemDescription(), savedOrder.getAcceptanceDate(),
                         serviceIds, articleIds,
-                        savedOrder.getStatus().name(), savedOrder.getCompleteDate()))
+                        savedOrder.getStatus(), savedOrder.getCompleteDate()))
                 .when()
                 .put(CONTROLLER_URL + "/{id}", TEST_ID)
                 .then()
@@ -236,7 +236,7 @@ public class OrderControllerTest {
         RestAssuredMockMvc.given()
                 .contentType(ContentType.JSON)
                 .body(new OrderRequestDto(TEST_ID, "", TEST_ACCEPTANCE_DATE,
-                        List.of(service.getId()), List.of(), TEST_ACCEPTED_STATUS.name(), TEST_COMPLETED_DATE))
+                        List.of(service.getId()), List.of(), TEST_ACCEPTED_STATUS, TEST_COMPLETED_DATE))
                 .param("orderStatus", OrderStatus.COMPLETED)
                 .when()
                 .put(CONTROLLER_URL + "/{id}/status", TEST_ID)

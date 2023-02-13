@@ -8,6 +8,8 @@ import com.mate.test.autoservice.mateautoservice.service.CarService;
 import com.mate.test.autoservice.mateautoservice.service.ServiceService;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class OrderRequestDtoMapper implements RequestDtoMapper<OrderRequestDto, Order> {
     private final CarService carService;
@@ -28,9 +30,17 @@ public class OrderRequestDtoMapper implements RequestDtoMapper<OrderRequestDto, 
         order.setCar(carService.getById(dto.getCarId()));
         order.setProblemDescription(dto.getProblemDescription());
         order.setAcceptanceDate(dto.getAcceptanceDate());
-        order.setServices(serviceService.getAllByIds(dto.getServicesIds()));
-        order.setArticles(articleService.getAllByIds(dto.getArticlesIds()));
-        order.setStatus(OrderStatus.valueOf(dto.getStatus()));
+        if (dto.getServicesIds() == null) {
+            order.setServices(List.of());
+        } else {
+            order.setServices(serviceService.getAllByIds(dto.getServicesIds()));
+        }
+        if (dto.getArticlesIds() == null) {
+            order.setArticles(List.of());
+        } else {
+            order.setArticles(articleService.getAllByIds(dto.getArticlesIds()));
+        }
+        order.setStatus(dto.getStatus());
         order.setCompleteDate(dto.getCompletedDate());
         return order;
     }

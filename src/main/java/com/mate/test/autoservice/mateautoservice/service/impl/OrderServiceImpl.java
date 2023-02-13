@@ -38,6 +38,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public List<Order> getAll() {
+        return orderRepository.findAll();
+    }
+
+    @Override
     public Order save(Order order) {
         return orderRepository.save(order);
     }

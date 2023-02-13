@@ -5,6 +5,8 @@ import com.mate.test.autoservice.mateautoservice.model.Owner;
 import java.util.List;
 
 public interface OwnerService {
+    List<Owner> getAll();
+
     Owner save(Owner owner);
 
     Owner getById(Long id);

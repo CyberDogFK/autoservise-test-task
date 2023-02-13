@@ -11,6 +11,8 @@ import com.mate.test.autoservice.mateautoservice.service.mapper.ResponseDtoMappe
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -18,6 +20,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/car")
@@ -37,6 +42,18 @@ public class CarController {
         this.carResponseDtoMapper = carResponseDtoMapper;
     }
 
+    @GetMapping
+    public List<CarResponseDto> getAll() {
+        return carService.getAll().stream()
+                .map(carResponseDtoMapper::mapToDto)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/{id}")
+    public CarResponseDto get(@PathVariable Long id) {
+        return carResponseDtoMapper.mapToDto(carService.getById(id));
+    }
+
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
     @Operation(description = "Save new car into Db")
@@ -51,6 +68,7 @@ public class CarController {
         return carResponseDtoMapper.mapToDto(saved);
     }
 
+    @CrossOrigin
     @PutMapping("/{id}")
     @Operation(description = "Update information about car with id")
     public CarResponseDto update(@PathVariable

@@ -26,7 +26,7 @@ public class Owner {
             sequenceName = "owner_id_seq",
             allocationSize = 1)
     private Long id;
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.MERGE)
     private List<Car> cars;
     @OneToMany
     private List<Order> orders;

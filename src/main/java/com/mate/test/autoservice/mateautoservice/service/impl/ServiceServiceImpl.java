@@ -15,6 +15,11 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
+    public List<Service> getAll() {
+        return serviceRepository.findAll();
+    }
+
+    @Override
     public Service save(Service service) {
         return serviceRepository.save(service);
     }
@@ -32,10 +37,6 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Override
     public List<Service> getAllByIds(List<Long> ids) {
-        List<Service> allById = serviceRepository.findAllById(ids);
-        if (allById.isEmpty()) {
-            throw new RuntimeException("Can't find any service from ids " + ids);
-        }
-        return allById;
+        return serviceRepository.findAllById(ids);
     }
 }

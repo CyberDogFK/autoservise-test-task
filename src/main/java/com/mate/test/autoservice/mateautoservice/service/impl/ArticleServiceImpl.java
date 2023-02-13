@@ -15,6 +15,18 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    public Article get(Long id) {
+        return articleRepository.findById(id).orElseThrow(() ->
+                new RuntimeException("No article with id " + id)
+        );
+    }
+
+    @Override
+    public List<Article> getAll() {
+        return articleRepository.findAll();
+    }
+
+    @Override
     public List<Article> getAllByIds(List<Long> ids) {
         return articleRepository.findAllById(ids);
     }

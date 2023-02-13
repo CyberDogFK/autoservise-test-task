@@ -4,6 +4,7 @@ import com.mate.test.autoservice.mateautoservice.model.Service;
 import java.util.List;
 
 public interface ServiceService {
+    List<Service> getAll();
     Service save(Service service);
 
     List<Service> saveAll(List<Service> services);
