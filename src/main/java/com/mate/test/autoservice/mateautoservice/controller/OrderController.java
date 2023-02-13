@@ -18,7 +18,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -52,6 +55,19 @@ public class OrderController {
         this.carService = carService;
         this.ownerService = ownerService;
         this.masterService = masterService;
+    }
+
+    @GetMapping
+    public List<OrderResponseDto> getAll() {
+        return orderService.getAll().stream()
+                .map(orderResponseDtoMapper::mapToDto)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/{id}")
+    public OrderResponseDto getById(@PathVariable Long id) {
+        return orderResponseDtoMapper.mapToDto(
+                orderService.getById(id));
     }
 
     @PostMapping
@@ -89,6 +105,7 @@ public class OrderController {
                 orderService.addArticleForOrder(articlesToSave, order)));
     }
 
+    @CrossOrigin
     @PutMapping("/{id}")
     @Operation(description = "Change specific order")
     public OrderResponseDto update(@PathVariable
@@ -98,21 +115,15 @@ public class OrderController {
                                        @Parameter(description = "Take new params of object,"
                                                + " same as in post request")
                                        OrderRequestDto orderRequestDto) {
-        Owner owner = carService.getById(orderRequestDto.getCarId())
-                .getOwner();
-        ownerService.save(owner);
         Order order = orderRequestDtoMapper.mapToModel(orderRequestDto);
         order.setId(id);
         BigDecimal priceWithDiscount = orderService.getPriceWithDiscount(order);
         order.setPrice(priceWithDiscount);
-        List<Order> orders = owner.getOrders();
-        if (!orders.contains(order)) {
-            orders.add(order);
-            owner.setOrders(orders);
-        }
+        System.err.println(order.getCar());
         return orderResponseDtoMapper.mapToDto(orderService.save(order));
     }
 
+    @CrossOrigin
     @PutMapping("/{id}/status")
     @Operation(description = "Change status of order")
     public OrderResponseDto updateStatus(@PathVariable

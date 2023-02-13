@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,6 +46,19 @@ public class OwnerController {
         this.carResponseDtoMapper = carResponseDtoMapper;
     }
 
+    @GetMapping
+    public List<OwnerResponseDto> getAll() {
+        return ownerService.getAll().stream()
+                .map(ownerResponseDtoMapper::mapToDto)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/{id}")
+    public OwnerResponseDto getById(@PathVariable Long id) {
+        return ownerResponseDtoMapper.mapToDto(ownerService.getById(id));
+    }
+
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(description = "Creating owner and return creating object")
@@ -56,6 +70,7 @@ public class OwnerController {
                         ownerRequestDtoMapper.mapToModel(ownerRequestDto)));
     }
 
+    @CrossOrigin
     @PutMapping("/{id}")
     @Operation(description = "Update information about owner")
     public OwnerResponseDto update(@PathVariable
@@ -64,6 +79,7 @@ public class OwnerController {
                                    @RequestBody
                                        @Parameter(description = "Take new information about owner")
                                        OwnerRequestDto ownerRequestDto) {
+        System.out.println("put");
         Owner owner = ownerRequestDtoMapper.mapToModel(ownerRequestDto);
         owner.setId(id);
         return ownerResponseDtoMapper.mapToDto(ownerService.save(owner));

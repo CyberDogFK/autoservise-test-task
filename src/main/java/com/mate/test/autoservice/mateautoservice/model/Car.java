@@ -29,7 +29,7 @@ public class Car {
     private String model;
     private Integer year;
     private String regNumber;
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne
     private Owner owner;
 
     public Car(String brand, String model, Integer year, String regNumber, Owner owner) {

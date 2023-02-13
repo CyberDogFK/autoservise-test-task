@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,17 +42,33 @@ public class MasterController {
         this.orderResponseDtoMapper = orderResponseDtoMapper;
     }
 
+    @GetMapping
+    public List<MasterResponseDto> getAll() {
+        return masterService.getAll().stream()
+                .map(masterResponseDtoMapper::mapToDto)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/{id}")
+    public MasterResponseDto getById(@PathVariable Long id) {
+        return masterResponseDtoMapper.mapToDto(masterService.getById(id));
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(description = "Create master and return created master with id")
     public MasterResponseDto create(@RequestBody
                                         @Parameter(description = "Information about master")
                                         MasterRequestDto requestDto) {
+        if (requestDto.getSolvedOrdersIds() == null) {
+            requestDto.setSolvedOrdersIds(List.of());
+        }
         return masterResponseDtoMapper.mapToDto(
                 masterService.save(
                         masterRequestDtoMapper.mapToModel(requestDto)));
     }
 
+    @CrossOrigin
     @PutMapping("/{id}")
     @Operation(description = "Change information about master with id from path")
     public MasterResponseDto update(@PathVariable
@@ -68,7 +85,7 @@ public class MasterController {
 
     @GetMapping("/{id}/orders")
     @Operation(description = "Find master orders by master id")
-    public List<OrderResponseDto> getById(@PathVariable
+    public List<OrderResponseDto> getOrdersById(@PathVariable
                                               @Parameter(description = "Id of master")
                                               Long id) {
         return masterService.getById(id).getSolvedOrders().stream()

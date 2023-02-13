@@ -75,6 +75,11 @@ public class MasterServiceImpl implements MasterService {
     }
 
     @Override
+    public List<Master> getAll() {
+        return masterRepository.findAll();
+    }
+
+    @Override
     public Master save(Master master) {
         return masterRepository.save(master);
     }

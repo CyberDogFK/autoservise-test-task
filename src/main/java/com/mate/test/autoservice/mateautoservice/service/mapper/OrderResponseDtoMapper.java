@@ -22,7 +22,7 @@ public class OrderResponseDtoMapper implements ResponseDtoMapper<OrderResponseDt
         responseDto.setArticlesIds(order.getArticles().stream()
                 .map(Article::getId)
                 .collect(Collectors.toList()));
-        responseDto.setStatus(order.getStatus().toString());
+        responseDto.setStatus(order.getStatus());
         responseDto.setPrice(order.getPrice());
         responseDto.setCompletedDate(order.getCompleteDate());
         return responseDto;

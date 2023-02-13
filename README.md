@@ -1,5 +1,9 @@
 ## Auto-service API
 
+For better experience you can use it with frontend part from
+
+https://github.com/CyberDogFK/AutoserviceFrontendAngular
+
 ## Description of project
 
 This api present work with Autoservice, for controling cusotmer orders, cars, and you masters
@@ -100,9 +104,8 @@ If not:
 2. Change
    src/main/resources/application.properties
    , change values to you database, i create this application for work with MySQl, so recommend use the same
-3. Use
+3. Use in command line, from directory.
 ```
 ./mvnw spring-boot:run
-```` 
-in command line, from directory.
+````
 4. GoTo localhost:6868 and have fun
